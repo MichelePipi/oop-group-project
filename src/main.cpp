@@ -1,4 +1,3 @@
-// main.cpp (Updated: start with drawn shape, then upgrade to textures based on CPS)
 #include <SFML/Graphics.hpp>
 #include "GameManager.hpp"
 #include <iostream>
@@ -22,7 +21,6 @@ int main() {
         return 1;
     }
 
-    // Load cookie textures
     sf::Texture cookiePixelTex, cookieSmoothTex, cookieBlurTex, cookieGoldenTex;
     if (!cookiePixelTex.loadFromFile("../assets/cookie_pixel.png")) std::cerr << "Failed to load cookie_pixel.png\n";
     if (!cookieSmoothTex.loadFromFile("../assets/cookie_smooth.png")) std::cerr << "Failed to load cookie_smooth.png\n";
