@@ -1,9 +1,10 @@
+// main.cpp (Updated: start with drawn shape, then upgrade to textures based on CPS)
 #include <SFML/Graphics.hpp>
 #include "GameManager.hpp"
 #include <iostream>
 #include <sstream>
 #include <vector>
-#include <cstdint> 
+#include <cstdint>
 #include <algorithm>
 
 struct FloatingText {
@@ -21,13 +22,23 @@ int main() {
         return 1;
     }
 
-    sf::Text cookieText(font, "Cookies: 0", 30);
-    cookieText.setFillColor(sf::Color::White);
-    cookieText.setPosition({20.f, 20.f});
+    // Load cookie textures
+    sf::Texture cookiePixelTex, cookieSmoothTex, cookieBlurTex, cookieGoldenTex;
+    if (!cookiePixelTex.loadFromFile("../assets/cookie_pixel.png")) std::cerr << "Failed to load cookie_pixel.png\n";
+    if (!cookieSmoothTex.loadFromFile("../assets/cookie_smooth.png")) std::cerr << "Failed to load cookie_smooth.png\n";
+    if (!cookieBlurTex.loadFromFile("../assets/cookie_broken.png")) std::cerr << "Failed to load cookie_blur.png\n";
+    if (!cookieGoldenTex.loadFromFile("../assets/cookie_golden.png")) std::cerr << "Failed to load cookie_golden.png\n";
 
-    sf::CircleShape cookie(100.f);
-    cookie.setFillColor(sf::Color(139, 69, 19));
-    cookie.setPosition({300.f, 200.f});
+    sf::CircleShape cookieShape(100.f);
+    cookieShape.setOrigin(sf::Vector2f(100.f, 100.f));
+    cookieShape.setFillColor(sf::Color(139, 69, 19));
+    cookieShape.setPosition(sf::Vector2f(720.f / 2.f, 480.f / 2.f));
+
+    sf::Sprite cookieSprite(cookiePixelTex);
+    cookieSprite.setOrigin(sf::Vector2f(100.f, 100.f));
+    cookieSprite.setPosition(sf::Vector2f(720.f / 2.f, 480.f / 2.f));
+
+    bool usingShape = true;
 
     GameManager game;
     sf::Clock cpsClock;
@@ -39,8 +50,12 @@ int main() {
 
     std::vector<FloatingText> floatingTexts;
 
+    sf::Text cookieText(font, "Cookies: 0", 30);
+    cookieText.setFillColor(sf::Color::White);
+    cookieText.setPosition({20.f, 20.f});
+
     sf::Text totalCps(font, "CPS: 0", 20);
-    totalCps.setFillColor(sf::Color::White);
+    totalCps.setFillColor(sf::Color::Yellow);
     totalCps.setPosition({20.f, 60.f});
 
     sf::Text buyFactory(font, "Buy Factory", 20);
@@ -75,7 +90,8 @@ int main() {
                     float mouseY = static_cast<float>(e->position.y);
                     sf::Vector2f mouse(mouseX, mouseY);
 
-                    if (cookie.getGlobalBounds().contains(mouse)) {
+                    if ((usingShape && cookieShape.getGlobalBounds().contains(mouse)) ||
+                        (!usingShape && cookieSprite.getGlobalBounds().contains(mouse))) {
                         game.handleChoice(1);
                         cookieClicked = true;
                         cookieScale = 1.2f;
@@ -111,7 +127,11 @@ int main() {
                 cookieScale = 1.f;
                 cookieClicked = false;
             }
-            cookie.setScale(sf::Vector2f(cookieScale, cookieScale));
+            if (usingShape) {
+                cookieShape.setScale(sf::Vector2f(cookieScale, cookieScale));
+            } else {
+                cookieSprite.setScale(sf::Vector2f(cookieScale, cookieScale));
+            }
         }
 
         for (auto& text : floatingTexts) {
@@ -128,11 +148,29 @@ int main() {
             floatingTexts.end()
         );
 
+        float cps = game.calculateTotalCps();
+
+        if (cps >= 5.f) {
+            cookieSprite.setTexture(cookieGoldenTex);
+            usingShape = false;
+        } else if (cps >= 4.f) {
+            cookieSprite.setTexture(cookieBlurTex);
+            usingShape = false;
+        } else if (cps >= 3.f) {
+            cookieSprite.setTexture(cookieSmoothTex);
+            usingShape = false;
+        } else if (cps >= 2.f) {
+            cookieSprite.setTexture(cookiePixelTex);
+            usingShape = false;
+        } else {
+            usingShape = true;
+        }
+
         cookieText.setString("Cookies: " + std::to_string(game.getCookieCount()));
 
         std::ostringstream cpsStream;
         cpsStream.precision(2);
-        cpsStream << std::fixed << "CPS: " << game.calculateTotalCps();
+        cpsStream << std::fixed << "CPS: " << cps;
         totalCps.setString(cpsStream.str());
 
         factoryInfo.setString("Cost: " + std::to_string(game.getGeneratorCost(0)) +
@@ -143,16 +181,14 @@ int main() {
                                   " | Lvl: " + std::to_string(game.getGeneratorLevel(2)));
 
         window.clear();
-        window.draw(cookie);
+        if (usingShape) window.draw(cookieShape);
+        else window.draw(cookieSprite);
         window.draw(cookieText);
         window.draw(totalCps);
-
         window.draw(buyFactory);
         window.draw(factoryInfo);
-
         window.draw(buyGrandma);
         window.draw(grandmaInfo);
-
         window.draw(buyAutoclicker);
         window.draw(autoclickerInfo);
 

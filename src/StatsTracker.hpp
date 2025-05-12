@@ -16,3 +16,5 @@ class StatsTracker {
             std::cout << "Total Cookies Earned: " << totalCookies << "\n";
         }
 };
+
+
