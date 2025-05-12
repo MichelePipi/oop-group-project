@@ -13,11 +13,11 @@ struct FloatingText {
 };
 
 int main() {
-    sf::RenderWindow window(sf::VideoMode({720, 480}, 32), "I Eat Cookies");
+    sf::RenderWindow window(sf::VideoMode({800, 500}, 32), "I Eat Cookies");
 
     sf::Font font;
     if (!font.openFromFile("../assets/arial.ttf")) {
-        std::cerr << "Failed to load font.\n";
+        std::cerr << "no fonts detected\n";
         return 1;
     }
 
