@@ -1,7 +1,8 @@
 #pragma once
 #include "ClickableItem.hpp"
 
-class ManualClicker : public ClickableItem {
+class ManualClicker : public ClickableItem 
+{
     public:
         ManualClicker();
         void generate(int& cookies) override;
