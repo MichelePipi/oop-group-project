@@ -9,7 +9,7 @@ class UpgradesManager {
         int cps;
     public:
         UpgradesManager(); 
-        UpgradesManager(Upgrade** upgrades);
+        UpgradesManager(Upgrade** u);
         int calculateCurrentCps();
 };
 
