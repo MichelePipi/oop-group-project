@@ -1,6 +1,7 @@
 #pragma once
 #include <iostream>
 
+
 class StatsTracker {
     private:
         int totalClicks = 0;

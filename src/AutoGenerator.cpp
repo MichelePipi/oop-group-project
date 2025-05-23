@@ -1,7 +1,6 @@
 #include "AutoGenerator.hpp"
 
-AutoGenerator::AutoGenerator(const std::string& name, int cost, float cps)
-    : ClickableItem(name, cost), baseCps(cps) {}
+AutoGenerator::AutoGenerator(const std::string& name, int cost, float cps) : ClickableItem(name, cost), baseCps(cps) {}
 
 void AutoGenerator::generate(int& cookies) 
 {

@@ -1,7 +1,6 @@
 #include "ManualClicker.hpp"
 
-ManualClicker::ManualClicker()
-    : ClickableItem("Manual Clicker", 0) {}
+ManualClicker::ManualClicker(): ClickableItem("Manual Clicker", 0) {}
 
 void ManualClicker::generate(int& cookies) 
 {

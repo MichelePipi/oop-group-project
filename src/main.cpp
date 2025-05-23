@@ -1,4 +1,4 @@
-#include <SFML/Graphics.hpp>
+#include <SFML\Graphics.hpp>
 #include "GameManager.hpp"
 #include <iostream>
 #include <sstream>

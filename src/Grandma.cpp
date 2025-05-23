@@ -1,8 +1,7 @@
 #include "Grandma.hpp"
 #include <cmath>
 
-Grandma::Grandma()
-    : AutoGenerator("Grandma", 25, 0.35f) {}
+Grandma::Grandma(): AutoGenerator("Grandma", 25, 0.35f) {}
 
 int Grandma::getCost() const 
 {
