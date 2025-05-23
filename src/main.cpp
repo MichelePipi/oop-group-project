@@ -40,7 +40,6 @@ int main() {
 
     GameManager game;
     sf::Clock cpsClock;
-    sf::Clock autosaveClock;
     sf::Clock animationClock;
 
     float cookieScale = 1.f;
@@ -114,10 +113,7 @@ int main() {
             cpsClock.restart();
         }
 
-        if (autosaveClock.getElapsedTime().asSeconds() >= 30.f) {
-            game.saveGame();
-            autosaveClock.restart();
-        }
+
 
         if (cookieClicked) {
             cookieScale -= deltaTime * 1.5f;
@@ -199,3 +195,4 @@ int main() {
 
     return 0;
 }
+//
