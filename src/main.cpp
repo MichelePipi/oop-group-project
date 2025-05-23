@@ -24,7 +24,7 @@ int main() {
     sf::Texture cookiePixelTex, cookieSmoothTex, cookieBlurTex, cookieGoldenTex;
     if (!cookiePixelTex.loadFromFile("../assets/cookie_pixel.png")) std::cerr << "Failed to load cookie_pixel.png\n";
     if (!cookieSmoothTex.loadFromFile("../assets/cookie_smooth.png")) std::cerr << "Failed to load cookie_smooth.png\n";
-    if (!cookieBlurTex.loadFromFile("../assets/cookie_broken.png")) std::cerr << "Failed to load cookie_blur.png\n";
+    if (!cookieBlurTex.loadFromFile("../assets/cookie_broken.png")) std::cerr << "Failed to load cookie_broken.png\n";
     if (!cookieGoldenTex.loadFromFile("../assets/cookie_golden.png")) std::cerr << "Failed to load cookie_golden.png\n";
 
     sf::CircleShape cookieShape(100.f);
@@ -195,4 +195,3 @@ int main() {
 
     return 0;
 }
-//
