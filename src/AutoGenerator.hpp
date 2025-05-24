@@ -8,6 +8,6 @@ class AutoGenerator : public ClickableItem {
     public:
         AutoGenerator(const std::string& name, int cost, float cps);
         void generate(int& cookies) override;
-        float getCps() const;
+        virtual float getCps() = 0;
         std::string getStatus() const override;
 };

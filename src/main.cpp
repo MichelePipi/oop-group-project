@@ -1,10 +1,12 @@
-#include <SFML\Graphics.hpp>
+#include <SFML/Graphics.hpp>
 #include "GameManager.hpp"
 #include <iostream>
 #include <sstream>
 #include <vector>
 #include <cstdint>
 #include <algorithm>
+
+enum class GameState { MainMenu, Playing };
 
 struct FloatingText {
     sf::Text text;
@@ -16,16 +18,36 @@ int main() {
     sf::RenderWindow window(sf::VideoMode({800, 500}, 32), "I Eat Cookies");
 
     sf::Font font;
-    if (!font.openFromFile("../assets/arial.ttf")) {
+    if (!font.openFromFile("./assets/arial.ttf")) {
         std::cerr << "no fonts detected\n";
         return 1;
     }
 
+    GameState gameState = GameState::MainMenu;
+
+    // Main Menu Texts
+    sf::Text title(font, "I Eat Cookies", 50);
+    title.setFillColor(sf::Color::White);
+    title.setPosition({200.f, 50.f});
+
+    sf::Text startBtn(font, "START", 30);
+    startBtn.setFillColor(sf::Color::Green);
+    startBtn.setPosition({320.f, 150.f});
+
+    sf::Text loadBtn(font, "LOAD", 30);
+    loadBtn.setFillColor(sf::Color::Yellow);
+    loadBtn.setPosition({320.f, 210.f});
+
+    sf::Text statsBtn(font, "STATS", 30);
+    statsBtn.setFillColor(sf::Color::Cyan);
+    statsBtn.setPosition({320.f, 270.f});
+
+    // Game Assets
     sf::Texture cookiePixelTex, cookieSmoothTex, cookieBlurTex, cookieGoldenTex;
-    if (!cookiePixelTex.loadFromFile("../assets/cookie_pixel.png")) std::cerr << "Failed to load cookie_pixel.png\n";
-    if (!cookieSmoothTex.loadFromFile("../assets/cookie_smooth.png")) std::cerr << "Failed to load cookie_smooth.png\n";
-    if (!cookieBlurTex.loadFromFile("../assets/cookie_broken.png")) std::cerr << "Failed to load cookie_broken.png\n";
-    if (!cookieGoldenTex.loadFromFile("../assets/cookie_golden.png")) std::cerr << "Failed to load cookie_golden.png\n";
+    if (!cookiePixelTex.loadFromFile("./assets/cookie_pixel.png")) std::cerr << "Failed to load cookie_pixel.png\n";
+    if (!cookieSmoothTex.loadFromFile("./assets/cookie_smooth.png")) std::cerr << "Failed to load cookie_smooth.png\n";
+    if (!cookieBlurTex.loadFromFile("./assets/cookie_broken.png")) std::cerr << "Failed to load cookie_broken.png\n";
+    if (!cookieGoldenTex.loadFromFile("./assets/cookie_golden.png")) std::cerr << "Failed to load cookie_golden.png\n";
 
     sf::CircleShape cookieShape(100.f);
     cookieShape.setOrigin(sf::Vector2f(100.f, 100.f));
@@ -87,107 +109,122 @@ int main() {
                     float mouseY = static_cast<float>(e->position.y);
                     sf::Vector2f mouse(mouseX, mouseY);
 
-                    if ((usingShape && cookieShape.getGlobalBounds().contains(mouse)) ||
-                        (!usingShape && cookieSprite.getGlobalBounds().contains(mouse))) {
-                        game.handleChoice(1);
-                        cookieClicked = true;
-                        cookieScale = 1.2f;
+                    if (gameState == GameState::MainMenu) {
+                        if (startBtn.getGlobalBounds().contains(mouse)) {
+                            gameState = GameState::Playing;
+                        }
+                        // You can handle loadBtn and statsBtn later
+                    } else if (gameState == GameState::Playing) {
+                        if ((usingShape && cookieShape.getGlobalBounds().contains(mouse)) ||
+                            (!usingShape && cookieSprite.getGlobalBounds().contains(mouse))) {
+                            game.handleChoice(1);
+                            cookieClicked = true;
+                            cookieScale = 1.2f;
 
-                        sf::Text plus(font, "+1", 20);
-                        plus.setFillColor(sf::Color::White);
-                        plus.setPosition(mouse);
-                        floatingTexts.push_back({plus, sf::Vector2f(0, -40.f), 1.0f});
-                    } else if (buyFactory.getGlobalBounds().contains(mouse)) {
-                        game.handleChoice(2);
-                    } else if (buyGrandma.getGlobalBounds().contains(mouse)) {
-                        game.handleChoice(3);
-                    } else if (buyAutoclicker.getGlobalBounds().contains(mouse)) {
-                        game.handleChoice(4);
+                            sf::Text plus(font, "+1", 20);
+                            plus.setFillColor(sf::Color::White);
+                            plus.setPosition(mouse);
+                            floatingTexts.push_back({plus, sf::Vector2f(0, -40.f), 1.0f});
+                        } else if (buyFactory.getGlobalBounds().contains(mouse)) {
+                            game.handleChoice(2);
+                        } else if (buyGrandma.getGlobalBounds().contains(mouse)) {
+                            game.handleChoice(3);
+                        } else if (buyAutoclicker.getGlobalBounds().contains(mouse)) {
+                            game.handleChoice(4);
+                        }
                     }
                 }
             }
         }
 
-        if (cpsClock.getElapsedTime().asSeconds() >= 1.f) {
-            game.runAutoGeneration();
-            cpsClock.restart();
-        }
-
-
-
-        if (cookieClicked) {
-            cookieScale -= deltaTime * 1.5f;
-            if (cookieScale <= 1.f) {
-                cookieScale = 1.f;
-                cookieClicked = false;
+        if (gameState == GameState::Playing) {
+            if (cpsClock.getElapsedTime().asSeconds() >= 1.f) {
+                game.runAutoGeneration();
+                cpsClock.restart();
             }
-            if (usingShape) {
-                cookieShape.setScale(sf::Vector2f(cookieScale, cookieScale));
+
+            if (cookieClicked) {
+                cookieScale -= deltaTime * 1.5f;
+                if (cookieScale <= 1.f) {
+                    cookieScale = 1.f;
+                    cookieClicked = false;
+                }
+                if (usingShape) {
+                    cookieShape.setScale(sf::Vector2f(cookieScale, cookieScale));
+                } else {
+                    cookieSprite.setScale(sf::Vector2f(cookieScale, cookieScale));
+                }
+            }
+
+            for (auto& text : floatingTexts) {
+                text.text.move(text.velocity * deltaTime);
+                text.lifetime -= deltaTime;
+                sf::Color color = text.text.getFillColor();
+                color.a = static_cast<uint8_t>(255 * (text.lifetime));
+                text.text.setFillColor(color);
+            }
+            floatingTexts.erase(
+                std::remove_if(floatingTexts.begin(), floatingTexts.end(), [](const FloatingText& t) {
+                    return t.lifetime <= 0;
+                }),
+                floatingTexts.end()
+            );
+
+            float cps = game.calculateTotalCps();
+
+            if (cps >= 5.f) {
+                cookieSprite.setTexture(cookieGoldenTex);
+                usingShape = false;
+            } else if (cps >= 4.f) {
+                cookieSprite.setTexture(cookieBlurTex);
+                usingShape = false;
+            } else if (cps >= 3.f) {
+                cookieSprite.setTexture(cookieSmoothTex);
+                usingShape = false;
+            } else if (cps >= 2.f) {
+                cookieSprite.setTexture(cookiePixelTex);
+                usingShape = false;
             } else {
-                cookieSprite.setScale(sf::Vector2f(cookieScale, cookieScale));
+                usingShape = true;
             }
+
+            cookieText.setString("Cookies: " + std::to_string(game.getCookieCount()));
+
+            std::ostringstream cpsStream;
+            cpsStream.precision(2);
+            cpsStream << std::fixed << "CPS: " << cps;
+            totalCps.setString(cpsStream.str());
+
+            factoryInfo.setString("Cost: " + std::to_string(game.getGeneratorCost(0)) +
+                                   " | Lvl: " + std::to_string(game.getGeneratorLevel(0)));
+            grandmaInfo.setString("Cost: " + std::to_string(game.getGeneratorCost(1)) +
+                                   " | Lvl: " + std::to_string(game.getGeneratorLevel(1)));
+            autoclickerInfo.setString("Cost: " + std::to_string(game.getGeneratorCost(2)) +
+                                      " | Lvl: " + std::to_string(game.getGeneratorLevel(2)));
         }
-
-        for (auto& text : floatingTexts) {
-            text.text.move(text.velocity * deltaTime);
-            text.lifetime -= deltaTime;
-            sf::Color color = text.text.getFillColor();
-            color.a = static_cast<uint8_t>(255 * (text.lifetime));
-            text.text.setFillColor(color);
-        }
-        floatingTexts.erase(
-            std::remove_if(floatingTexts.begin(), floatingTexts.end(), [](const FloatingText& t) {
-                return t.lifetime <= 0;
-            }),
-            floatingTexts.end()
-        );
-
-        float cps = game.calculateTotalCps();
-
-        if (cps >= 5.f) {
-            cookieSprite.setTexture(cookieGoldenTex);
-            usingShape = false;
-        } else if (cps >= 4.f) {
-            cookieSprite.setTexture(cookieBlurTex);
-            usingShape = false;
-        } else if (cps >= 3.f) {
-            cookieSprite.setTexture(cookieSmoothTex);
-            usingShape = false;
-        } else if (cps >= 2.f) {
-            cookieSprite.setTexture(cookiePixelTex);
-            usingShape = false;
-        } else {
-            usingShape = true;
-        }
-
-        cookieText.setString("Cookies: " + std::to_string(game.getCookieCount()));
-
-        std::ostringstream cpsStream;
-        cpsStream.precision(2);
-        cpsStream << std::fixed << "CPS: " << cps;
-        totalCps.setString(cpsStream.str());
-
-        factoryInfo.setString("Cost: " + std::to_string(game.getGeneratorCost(0)) +
-                               " | Lvl: " + std::to_string(game.getGeneratorLevel(0)));
-        grandmaInfo.setString("Cost: " + std::to_string(game.getGeneratorCost(1)) +
-                               " | Lvl: " + std::to_string(game.getGeneratorLevel(1)));
-        autoclickerInfo.setString("Cost: " + std::to_string(game.getGeneratorCost(2)) +
-                                  " | Lvl: " + std::to_string(game.getGeneratorLevel(2)));
 
         window.clear();
-        if (usingShape) window.draw(cookieShape);
-        else window.draw(cookieSprite);
-        window.draw(cookieText);
-        window.draw(totalCps);
-        window.draw(buyFactory);
-        window.draw(factoryInfo);
-        window.draw(buyGrandma);
-        window.draw(grandmaInfo);
-        window.draw(buyAutoclicker);
-        window.draw(autoclickerInfo);
 
-        for (auto& t : floatingTexts) {
-            window.draw(t.text);
+        if (gameState == GameState::MainMenu) {
+            window.draw(title);
+            window.draw(startBtn);
+            window.draw(loadBtn);
+            window.draw(statsBtn);
+        } else if (gameState == GameState::Playing) {
+            if (usingShape) window.draw(cookieShape);
+            else window.draw(cookieSprite);
+            window.draw(cookieText);
+            window.draw(totalCps);
+            window.draw(buyFactory);
+            window.draw(factoryInfo);
+            window.draw(buyGrandma);
+            window.draw(grandmaInfo);
+            window.draw(buyAutoclicker);
+            window.draw(autoclickerInfo);
+
+            for (auto& t : floatingTexts) {
+                window.draw(t.text);
+            }
         }
 
         window.display();
