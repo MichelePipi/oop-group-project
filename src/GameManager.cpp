@@ -35,6 +35,9 @@ void GameManager::handleChoice(int choice) {
         case 6:
             stats.printStats();
             break;
+        case 9:
+            saveFile.saveFile("a");
+            break;
         case 0:
             std::cout << "Exiting game.\n";
             break;
@@ -57,11 +60,6 @@ void GameManager::runAutoGeneration() {
         stats.addCookies(cookies - before);
     }
 }
-
-
-
-
-
 
 int GameManager::getCookieCount() const {
     return cookies;

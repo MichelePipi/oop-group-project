@@ -5,6 +5,7 @@
 #include <vector>
 #include <cstdint>
 #include <algorithm>
+#include "../include/portable-file-dialogs.h"
 
 enum class GameState { MainMenu, Playing };
 
@@ -15,12 +16,14 @@ struct FloatingText {
 };
 
 int main() {
-    sf::RenderWindow window(sf::VideoMode({800, 500}, 32), "I Eat Cookies");
+    bool showSavedMessage = false; // flag for determining whether the "Game has been saved!" message should be shown.
 
-    sf::Font font;
+    sf::RenderWindow window(sf::VideoMode({800, 500}, 32), "I Eat Cookies"); // render window obj
+
+    sf::Font font; // Loading font from assets, make sure that it loads correctly.
     if (!font.openFromFile("./assets/arial.ttf")) {
         std::cerr << "no fonts detected\n";
-        return 1;
+        return 1; // error
     }
 
     GameState gameState = GameState::MainMenu;
@@ -38,9 +41,9 @@ int main() {
     loadBtn.setFillColor(sf::Color::Yellow);
     loadBtn.setPosition({320.f, 210.f});
 
-    sf::Text statsBtn(font, "STATS", 30);
-    statsBtn.setFillColor(sf::Color::Cyan);
-    statsBtn.setPosition({320.f, 270.f});
+    // sf::Text statsBtn(font, "STATS", 30);
+    // statsBtn.setFillColor(sf::Color::Cyan);
+    // statsBtn.setPosition({320.f, 270.f});
 
     // Game Assets
     sf::Texture cookiePixelTex, cookieSmoothTex, cookieBlurTex, cookieGoldenTex;
@@ -73,6 +76,11 @@ int main() {
     cookieText.setFillColor(sf::Color::White);
     cookieText.setPosition({20.f, 20.f});
 
+    sf::Text saveText(font, "SAVE", 30);
+    saveText.setFillColor(sf::Color::White);
+    // set save text to top right corner
+    saveText.setPosition({320.f, 20.f});
+
     sf::Text totalCps(font, "CPS: 0", 20);
     totalCps.setFillColor(sf::Color::Yellow);
     totalCps.setPosition({20.f, 60.f});
@@ -95,6 +103,11 @@ int main() {
     sf::Text autoclickerInfo(font, "", 16);
     autoclickerInfo.setPosition({550.f, 430.f});
 
+    sf::Text savedMessage(font, "", 20);
+    sf::Clock savedMessageClock;
+    savedMessage.setPosition({300.f, 60.f});
+
+
     while (window.isOpen()) {
         float deltaTime = animationClock.restart().asSeconds();
 
@@ -112,6 +125,9 @@ int main() {
                     if (gameState == GameState::MainMenu) {
                         if (startBtn.getGlobalBounds().contains(mouse)) {
                             gameState = GameState::Playing;
+                        }
+                        if (loadBtn.getGlobalBounds().contains(mouse)) {
+
                         }
                         // You can handle loadBtn and statsBtn later
                     } else if (gameState == GameState::Playing) {
@@ -131,6 +147,12 @@ int main() {
                             game.handleChoice(3);
                         } else if (buyAutoclicker.getGlobalBounds().contains(mouse)) {
                             game.handleChoice(4);
+                        } else if (saveText.getGlobalBounds().contains(mouse)) {
+                            game.handleChoice(9);
+                            std::string uuid = game.saveFile.generateFileName(); // You must expose this in GameManager
+                            savedMessage.setString("Saved to [" + uuid.substr(0, 5) + "]");
+                            savedMessageClock.restart();
+                            showSavedMessage = true;
                         }
                     }
                 }
@@ -209,7 +231,7 @@ int main() {
             window.draw(title);
             window.draw(startBtn);
             window.draw(loadBtn);
-            window.draw(statsBtn);
+            // window.draw(statsBtn);
         } else if (gameState == GameState::Playing) {
             if (usingShape) window.draw(cookieShape);
             else window.draw(cookieSprite);
@@ -221,10 +243,17 @@ int main() {
             window.draw(grandmaInfo);
             window.draw(buyAutoclicker);
             window.draw(autoclickerInfo);
+            window.draw(saveText);
 
             for (auto& t : floatingTexts) {
                 window.draw(t.text);
             }
+            if (showSavedMessage && savedMessageClock.getElapsedTime().asSeconds() < 3.f) {
+                window.draw(savedMessage);
+            } else {
+                showSavedMessage = false;
+            }
+
         }
 
         window.display();

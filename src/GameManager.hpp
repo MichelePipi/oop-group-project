@@ -10,6 +10,7 @@
 #include "Grandma.hpp"
 #include "Autoclicker.hpp"
 #include "StatsTracker.hpp"
+#include "SaveFileManager.hpp"
 
 
 class GameManager {
@@ -18,9 +19,11 @@ class GameManager {
         std::unique_ptr<ClickableItem> manualClicker;
         std::vector<std::unique_ptr<AutoGenerator>> generators;
         StatsTracker stats;
+
     public:
         GameManager();
 
+        // generator/ui handlers
         void handleChoice(int choice);
         void showGenerators();
         void runAutoGeneration();
@@ -30,4 +33,5 @@ class GameManager {
         float calculateTotalCps() const;
         int getGeneratorCost(int index) const;
         int getGeneratorLevel(int index) const;
+        SaveFileManager saveFile;
 };

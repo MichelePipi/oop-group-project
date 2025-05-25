@@ -1,0 +1,43 @@
+//
+// Created by Michele Antonio Pipicelli on 25/5/2025.
+//
+
+#include "SaveFileManager.hpp"
+#include <iostream>
+#include <string>
+#include <random>
+
+SaveFileManager::SaveFileManager() {
+}
+
+SaveFileManager::~SaveFileManager() {
+}
+
+void SaveFileManager::saveFile(std::string fileName) {
+
+}
+
+void SaveFileManager::loadFile(std::string fileName) {
+}
+
+bool SaveFileManager::isValidFloat(const std::string &s, float &result) {
+}
+
+std::string SaveFileManager::generateFileName() {
+    static std::random_device dev;
+    static std::mt19937 rng(dev());
+
+    std::uniform_int_distribution<int> dist(0, 15);
+
+    const char *v = "0123456789abcdef";
+    const bool dash[] = { 0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0 };
+
+    std::string res;
+    for (int i = 0; i < 16; i++) {
+        if (dash[i]) res += "-";
+        res += v[dist(rng)];
+        res += v[dist(rng)];
+    }
+
+    return res;
+}
