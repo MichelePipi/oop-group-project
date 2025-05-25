@@ -2,7 +2,7 @@
 
 ManualClicker::ManualClicker(): ClickableItem("Manual Clicker", 0) {}
 
-void ManualClicker::generate(int& cookies) 
+void ManualClicker::generate(long long cookies)
 {
     cookies += 1;
 }

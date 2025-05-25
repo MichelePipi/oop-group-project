@@ -36,7 +36,7 @@ void GameManager::handleChoice(int choice) {
             stats.printStats();
             break;
         case 9:
-            saveFile.saveFile("a");
+            saveFile.saveFile(cookies, generators);
             break;
         case 0:
             std::cout << "Exiting game.\n";
@@ -80,3 +80,8 @@ int GameManager::getGeneratorLevel(int index) const {
 int GameManager::getGeneratorCost(int index) const {
     return generators[index]->getCost();
 }
+
+void GameManager::setCookies(long long c) {
+    cookies = c;
+}
+

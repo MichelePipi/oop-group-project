@@ -6,6 +6,11 @@
 #include <iostream>
 #include <string>
 #include <random>
+#include <iostream>
+#include <memory>
+#include <fstream>
+
+#include "AutoGenerator.hpp"
 
 SaveFileManager::SaveFileManager() {
 }
@@ -13,8 +18,10 @@ SaveFileManager::SaveFileManager() {
 SaveFileManager::~SaveFileManager() {
 }
 
-void SaveFileManager::saveFile(std::string fileName) {
-
+void SaveFileManager::saveFile(long long cookies, const std::vector<std::unique_ptr<AutoGenerator>>& generators) {
+    std::ofstream Save(this->generateFileName() + ".txt");
+    Save << "test";
+    Save.close();
 }
 
 void SaveFileManager::loadFile(std::string fileName) {

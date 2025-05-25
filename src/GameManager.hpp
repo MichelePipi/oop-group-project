@@ -15,13 +15,13 @@
 
 class GameManager {
     private:
-        int cookies;
+        long long cookies;
         std::unique_ptr<ClickableItem> manualClicker;
-        std::vector<std::unique_ptr<AutoGenerator>> generators;
         StatsTracker stats;
 
     public:
         GameManager();
+        std::vector<std::unique_ptr<AutoGenerator>> generators;
 
         // generator/ui handlers
         void handleChoice(int choice);
@@ -33,5 +33,6 @@ class GameManager {
         float calculateTotalCps() const;
         int getGeneratorCost(int index) const;
         int getGeneratorLevel(int index) const;
+        void setCookies(long long c);
         SaveFileManager saveFile;
 };

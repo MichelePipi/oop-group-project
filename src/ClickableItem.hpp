@@ -13,7 +13,7 @@ class ClickableItem {
 
         virtual ~ClickableItem() = default;
 
-        virtual void generate(int& cookies) = 0;
+        virtual void generate(long long cookies) = 0;
         virtual std::string getStatus() const = 0;
         virtual int getCost() const = 0;
 

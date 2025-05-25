@@ -2,7 +2,7 @@
 
 AutoGenerator::AutoGenerator(const std::string& name, int cost, float cps) : ClickableItem(name, cost), baseCps(cps) {}
 
-void AutoGenerator::generate(int& cookies) 
+void AutoGenerator::generate(long long cookies)
 {
     
     cookies += static_cast<int>(getCps());

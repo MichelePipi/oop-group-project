@@ -7,7 +7,7 @@ class AutoGenerator : public ClickableItem {
 
     public:
         AutoGenerator(const std::string& name, int cost, float cps);
-        void generate(int& cookies) override;
+        void generate(long long cookies) override;
         float getCps() const;
         std::string getStatus() const override;
 };

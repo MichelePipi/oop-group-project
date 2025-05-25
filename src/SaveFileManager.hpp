@@ -5,13 +5,15 @@
 #ifndef SAVEFILEMANAGER_HPP
 #define SAVEFILEMANAGER_HPP
 #include <string>
+#include <vector>
+#include "AutoGenerator.hpp"
 
 
 class SaveFileManager {
     public:
         SaveFileManager();
         ~SaveFileManager();
-        void saveFile(std::string fileName);
+        void saveFile(long long cookies, const std::vector<std::unique_ptr<AutoGenerator>>& generators);
         void loadFile(std::string fileName);
         std::string generateFileName();
     private:
