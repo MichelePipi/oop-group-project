@@ -11,9 +11,9 @@ GameManager::GameManager()
 void GameManager::handleChoice(int choice) {
     switch (choice) {
         case 1:
-            manualClicker->generate(cookies);
+            manualClicker->generate(1);
             stats.registerClick();
-            stats.addCookies(1);
+            stats.addCookies(1LL);
             break;
         case 2:
         case 3:

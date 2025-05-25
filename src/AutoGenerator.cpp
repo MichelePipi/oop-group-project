@@ -4,7 +4,6 @@ AutoGenerator::AutoGenerator(const std::string& name, int cost, float cps) : Cli
 
 void AutoGenerator::generate(long long cookies)
 {
-    
     cookies += static_cast<int>(getCps());
 }
 

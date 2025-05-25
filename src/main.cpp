@@ -253,11 +253,8 @@ int main() {
             } else {
                 showSavedMessage = false;
             }
-
         }
-
         window.display();
     }
-
     return 0;
 }
