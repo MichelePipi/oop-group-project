@@ -8,4 +8,6 @@ class ManualClicker : public ClickableItem
         void generate(long long cookies) override;
         std::string getStatus() const override;
         int getCost() const override;
+        virtual ~ManualClicker() = default;
+
 };

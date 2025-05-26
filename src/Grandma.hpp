@@ -4,5 +4,6 @@
 class Grandma : public AutoGenerator {
     public:
         Grandma();
+        virtual ~Grandma() = default;
         int getCost() const override;
 };

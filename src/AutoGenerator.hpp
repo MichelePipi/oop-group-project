@@ -11,4 +11,6 @@ class AutoGenerator : public ClickableItem {
         void generate(long long cookies) override;
         float getCps() const;
         std::string getStatus() const override;
+        virtual ~AutoGenerator() = default;
+
 };
