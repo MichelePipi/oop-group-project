@@ -23,7 +23,7 @@ int main() {
     sf::RenderWindow window(sf::VideoMode({800, 500}, 32), "I Eat Cookies"); // render window obj
 
     sf::Font font; // Loading font from assets, make sure that it loads correctly.
-    if (!font.openFromFile("../assets/arial.ttf")) {
+    if (!font.openFromFile("./assets/arial.ttf")) {
         std::cerr << "no fonts detected\n";
         return 1; // error
     }
@@ -47,12 +47,16 @@ int main() {
     backToMainMenu.setFillColor(sf::Color::Green);
     backToMainMenu.setPosition({600.f, 20.f});
 
+    sf::Text guide(font, "Factories provide 0.5 CPS.\nGrandmas provide 0.35 CPS.\nAutoclickers provide 0.05CPS.", 40);
+    guide.setFillColor(sf::Color::White);
+    guide.setPosition({120.f, 300.f});
+
     // Game Assets
     sf::Texture cookiePixelTex, cookieSmoothTex, cookieBlurTex, cookieGoldenTex;
-    if (!cookiePixelTex.loadFromFile("../assets/cookie_pixel.png")) std::cerr << "Failed to load cookie_pixel.png\n";
-    if (!cookieSmoothTex.loadFromFile("../assets/cookie_smooth.png")) std::cerr << "Failed to load cookie_smooth.png\n";
-    if (!cookieBlurTex.loadFromFile("../assets/cookie_broken.png")) std::cerr << "Failed to load cookie_broken.png\n";
-    if (!cookieGoldenTex.loadFromFile("../assets/cookie_golden.png")) std::cerr << "Failed to load cookie_golden.png\n";
+    if (!cookiePixelTex.loadFromFile("./assets/cookie_pixel.png")) std::cerr << "Failed to load cookie_pixel.png\n";
+    if (!cookieSmoothTex.loadFromFile("./assets/cookie_smooth.png")) std::cerr << "Failed to load cookie_smooth.png\n";
+    if (!cookieBlurTex.loadFromFile("./assets/cookie_broken.png")) std::cerr << "Failed to load cookie_broken.png\n";
+    if (!cookieGoldenTex.loadFromFile("./assets/cookie_golden.png")) std::cerr << "Failed to load cookie_golden.png\n";
 
     sf::CircleShape cookieShape(100.f);
     cookieShape.setOrigin(sf::Vector2f(100.f, 100.f));
@@ -118,6 +122,13 @@ int main() {
     goldenCookieDoughInfo.setPosition({550.f, 270.f});
     goldenCookieDoughInfo.setFillColor(sf::Color::White);
 
+    // Error
+    sf::Clock errorClock;
+    sf::Text errorText(font, "Failed to load save data!", 24);
+    errorText.setFillColor(sf::Color::Red);
+    errorText.setPosition({100.f, 100.f});
+    bool showError = false;
+
 
     while (window.isOpen()) {
         float deltaTime = animationClock.restart().asSeconds();
@@ -138,7 +149,17 @@ int main() {
                             gameState = GameState::Playing;
                         }
                         if (loadBtn.getGlobalBounds().contains(mouse)) {
-                            game->saveFile.loadFile();
+                            std::vector<double> variables = game->saveFile.loadFile();
+                            if (variables.empty()) {
+                                showError = true;
+                                errorClock.restart(); // Start 1 second timer
+                            } else {
+                                game->setCookies((long)variables[0]);
+                                game->generators[0]->setLevel((int)variables[1]);
+                                game->generators[1]->setLevel((int)variables[2]);
+                                game->generators[2]->setLevel((int)variables[3]);
+                                game->hasGoldenDough = (bool)variables[4];
+                            }
                         }
                         // You can handle loadBtn and statsBtn later
                     } else if (gameState == GameState::Playing) {
@@ -252,6 +273,14 @@ int main() {
             window.draw(title);
             window.draw(startBtn);
             window.draw(loadBtn);
+            window.draw(guide);
+            if (showError) {
+                if (errorClock.getElapsedTime().asSeconds() < 5.0f) {
+                    window.draw(errorText);
+                } else {
+                    showError = false; // Stop showing error after 5 seconds
+                }
+            }
             // window.draw(statsBtn);
         } else if (gameState == GameState::Playing) {
             if (usingShape) window.draw(cookieShape);

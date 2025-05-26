@@ -51,7 +51,7 @@ std::vector<double> SaveFileManager::loadFile() {
 
         std::string line;
         int lineCount = 0;
-        while (lineCount < 4 && std::getline(file, line)) {
+        while (lineCount < 5 && std::getline(file, line)) {
             std::cout << "Read: " << line << std::endl;
             double value;
             if (!is_number(line, value)) {
@@ -62,8 +62,8 @@ std::vector<double> SaveFileManager::loadFile() {
             ++lineCount;
         }
 
-        if (lineCount < 4) {
-            std::cerr << "File contains fewer than 4 lines.\n";
+        if (lineCount < 5) {
+            std::cerr << "File contains fewer than 5 lines.\n";
             return {};
         }
 

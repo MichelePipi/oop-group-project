@@ -20,4 +20,5 @@ class ClickableItem {
         std::string getName() const { return name; }
         int getLevel() const { return level; }
         void increaseLevel() { level++; }
+        void setLevel(int l) { this->level = l; }
 };
