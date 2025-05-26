@@ -1,6 +1,6 @@
 CXX = g++
-CXXFLAGS = -std=c++17 -I/opt/homebrew/include
-LDFLAGS = -L/opt/homebrew/lib -lsfml-graphics -lsfml-window -lsfml-system
+CXXFLAGS = -std=c++17 -IC:/sfml/include
+LDFLAGS = -LC:/sfml/lib -lsfml-graphics -lsfml-window -lsfml-system -static-libgcc -static-libstdc++
 
 SRC = src/main.cpp \
       src/GameManager.cpp \
@@ -8,10 +8,9 @@ SRC = src/main.cpp \
       src/AutoGenerator.cpp \
       src/Factory.cpp \
       src/Grandma.cpp \
-      src/Autoclicker.cpp \
-      src/SaveFileManager.cpp
+      src/Autoclicker.cpp
 
-OUT = bin/cookie
+OUT = bin/cookie.exe
 
 all: $(OUT)
 
@@ -19,6 +18,6 @@ $(OUT): $(SRC)
 	$(CXX) $(CXXFLAGS) $(SRC) $(LDFLAGS) -o $(OUT)
 
 clean:
-	rm -f bin/cookie
+	del /Q bin\\*.exe
 
 rebuild: clean all
