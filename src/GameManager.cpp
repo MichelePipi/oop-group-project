@@ -14,6 +14,7 @@ void GameManager::handleChoice(int choice) {
             manualClicker->generate(1);
             stats.registerClick();
             stats.addCookies(1LL);
+            cookies += 1;
             break;
         case 2:
         case 3:

@@ -9,6 +9,7 @@
 #include <iostream>
 #include <memory>
 #include <fstream>
+#include "../include/portable-file-dialogs.h"
 
 #include "AutoGenerator.hpp"
 
@@ -29,7 +30,25 @@ void SaveFileManager::saveFile(long long cookies, const std::vector<std::unique_
     Save.close();
 }
 
-void SaveFileManager::loadFile(std::string fileName) {
+void SaveFileManager::loadFile() {
+    // read from the file
+    auto selection = pfd::open_file("Select a Save File", ".", { "Save Files (*.txt *.sav)", "*.txt *.sav" }).result();
+
+    if (!selection.empty()) {
+        std::ifstream file(selection[0]);
+        if (!file) {
+            std::cerr << "Failed to open file.\n";
+            return;
+        }
+
+        std::string line;
+        while (std::getline(file, line)) {
+            std::cout << "Read: " << line << std::endl;
+        }
+        file.close();
+    } else {
+        std::cout << "No file selected.\n";
+    }
 
 }
 

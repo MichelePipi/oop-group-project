@@ -127,7 +127,7 @@ int main() {
                             gameState = GameState::Playing;
                         }
                         if (loadBtn.getGlobalBounds().contains(mouse)) {
-
+                            game.saveFile.loadFile();
                         }
                         // You can handle loadBtn and statsBtn later
                     } else if (gameState == GameState::Playing) {
@@ -162,6 +162,7 @@ int main() {
         if (gameState == GameState::Playing) {
             if (cpsClock.getElapsedTime().asSeconds() >= 1.f) {
                 game.runAutoGeneration();
+                game.setCookies(game.getCookieCount()+game.calculateTotalCps());
                 cpsClock.restart();
             }
 
