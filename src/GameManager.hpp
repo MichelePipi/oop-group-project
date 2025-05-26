@@ -18,9 +18,9 @@ class GameManager {
         long long cookies;
         std::unique_ptr<ClickableItem> manualClicker;
         StatsTracker stats;
-        bool hasGoldenDough;
     public:
         GameManager();
+        bool hasGoldenDough;
         std::vector<std::unique_ptr<AutoGenerator>> generators;
 
         // generator/ui handlers

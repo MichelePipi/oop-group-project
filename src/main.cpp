@@ -4,6 +4,8 @@
 #include <sstream>
 #include <vector>
 #include <algorithm>
+
+#include "Action.hpp"
 #include "../include/portable-file-dialogs.h"
 
 enum class GameState { MainMenu, Playing };
@@ -102,9 +104,18 @@ int main() {
     sf::Text autoclickerInfo(font, "", 16);
     autoclickerInfo.setPosition({550.f, 430.f});
 
+    // Game Saved Message
     sf::Text savedMessage(font, "", 20);
     sf::Clock savedMessageClock;
     savedMessage.setPosition({300.f, 60.f});
+
+    // Golden Cookie Dough Text
+    sf::Text goldenCookieDough(font, "Buy Golden Cookie Dough", 20);
+    goldenCookieDough.setPosition({550.f, 250.f});
+    goldenCookieDough.setFillColor(sf::Color::Green);
+    sf::Text goldenCookieDoughInfo(font, "\n x2 CPS Permanently.", 16);
+    goldenCookieDoughInfo.setPosition({550.f, 270.f});
+    goldenCookieDoughInfo.setFillColor(sf::Color::White);
 
 
     while (window.isOpen()) {
@@ -141,19 +152,21 @@ int main() {
                             plus.setPosition(mouse);
                             floatingTexts.push_back({plus, sf::Vector2f(0, -40.f), 1.0f});
                         } else if (buyFactory.getGlobalBounds().contains(mouse)) {
-                            game.handleChoice(2);
+                            game.handleChoice(BUY_FACTORY);
                         } else if (buyGrandma.getGlobalBounds().contains(mouse)) {
-                            game.handleChoice(3);
+                            game.handleChoice(BUY_GRANDMA);
                         } else if (buyAutoclicker.getGlobalBounds().contains(mouse)) {
-                            game.handleChoice(4);
+                            game.handleChoice(BUY_AUTOCLICKER);
                         } else if (saveText.getGlobalBounds().contains(mouse)) {
-                            game.handleChoice(9);
+                            game.handleChoice(SAVE_FILE);
                             std::string uuid = game.saveFile.generateFileName(); // You must expose this in GameManager
                             savedMessage.setString("Saved to [" + uuid.substr(0, 5) + "]");
                             savedMessageClock.restart();
                             showSavedMessage = true;
                         } else if (backToMainMenu.getGlobalBounds().contains(mouse)) {
                             gameState = GameState::MainMenu;
+                        } else if (goldenCookieDough.getGlobalBounds().contains(mouse)) {
+                            game.handleChoice(BUY_GOLDEN_DOUGH);
                         }
                     }
                 }
@@ -211,6 +224,12 @@ int main() {
                 usingShape = true;
             }
 
+            if (!game.hasGoldenDough) {
+                goldenCookieDoughInfo.setString("Cost: 500, Active: NO\n x2 CPS Permanently.");
+            } else {
+                goldenCookieDoughInfo.setString("Cost: 500, Active: YES\n x2 CPS Permanently.");
+            }
+
             cookieText.setString("Cookies: " + std::to_string(game.getCookieCount()));
 
             std::ostringstream cpsStream;
@@ -246,6 +265,8 @@ int main() {
             window.draw(autoclickerInfo);
             window.draw(saveText);
             window.draw(backToMainMenu);
+            window.draw(goldenCookieDough);
+            window.draw(goldenCookieDoughInfo);
 
             for (auto& t : floatingTexts) {
                 window.draw(t.text);

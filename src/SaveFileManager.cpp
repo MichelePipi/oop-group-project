@@ -67,13 +67,9 @@ std::vector<double> SaveFileManager::loadFile() {
 
         file.close();
         return numbers;
-    } else {
-        std::cout << "No file selected.\n";
-        return {};
     }
-}
-
-bool SaveFileManager::isValidFloat(const std::string &s, float &result) {
+    std::cout << "No file selected.\n";
+    return {};
 }
 
 std::string SaveFileManager::generateFileName() {

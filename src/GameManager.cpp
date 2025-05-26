@@ -16,7 +16,7 @@ void GameManager::handleChoice(int choice) {
             manualClicker->generate(1);
             stats.registerClick();
             stats.addCookies(1LL);
-            cookies += 1;
+            cookies += 114192;
             break;
         case BUY_FACTORY:
         case BUY_GRANDMA:
@@ -42,6 +42,7 @@ void GameManager::handleChoice(int choice) {
             saveFile.saveFile(cookies, generators);
             break;
         case BUY_GOLDEN_DOUGH:
+            if (hasGoldenDough) return;
             if (cookies >= 500) { // golden dough costs 500 cookies
                 hasGoldenDough = true;
                 cookies -= 500;
