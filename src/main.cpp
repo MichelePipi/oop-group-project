@@ -3,7 +3,6 @@
 #include <iostream>
 #include <sstream>
 #include <vector>
-#include <cstdint>
 #include <algorithm>
 #include "../include/portable-file-dialogs.h"
 
@@ -44,10 +43,6 @@ int main() {
     sf::Text backToMainMenu(font, "MAIN MENU", 20);
     backToMainMenu.setFillColor(sf::Color::Green);
     backToMainMenu.setPosition({600.f, 20.f});
-
-    // sf::Text statsBtn(font, "STATS", 30);
-    // statsBtn.setFillColor(sf::Color::Cyan);
-    // statsBtn.setPosition({320.f, 270.f});
 
     // Game Assets
     sf::Texture cookiePixelTex, cookieSmoothTex, cookieBlurTex, cookieGoldenTex;
@@ -171,7 +166,6 @@ int main() {
                 game.setCookies(game.getCookieCount()+game.calculateTotalCps());
                 cpsClock.restart();
             }
-
             if (cookieClicked) {
                 cookieScale -= deltaTime * 1.5f;
                 if (cookieScale <= 1.f) {

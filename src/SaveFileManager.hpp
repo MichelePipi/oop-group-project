@@ -6,6 +6,7 @@
 #define SAVEFILEMANAGER_HPP
 #include <string>
 #include <vector>
+#include <memory>
 #include "AutoGenerator.hpp"
 
 

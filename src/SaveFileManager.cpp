@@ -6,7 +6,6 @@
 #include <iostream>
 #include <string>
 #include <random>
-#include <iostream>
 #include <memory>
 #include <fstream>
 #include "../include/portable-file-dialogs.h"
@@ -26,7 +25,7 @@ void SaveFileManager::saveFile(long long cookies, const std::vector<std::unique_
     Save << generators[1]->getLevel() << std::endl;
     Save << generators[2]->getLevel() << std::endl;
     // TODO: Add the total cookies earnt
-    Save << "test";
+    // Save << "test";
     Save.close();
 }
 

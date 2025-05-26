@@ -1,4 +1,5 @@
 #include "GameManager.hpp"
+#include "Action.hpp"
 
 GameManager::GameManager()
     : cookies(0), manualClicker(std::make_unique<ManualClicker>()) {
@@ -8,17 +9,18 @@ GameManager::GameManager()
 }
 
 
+
 void GameManager::handleChoice(int choice) {
     switch (choice) {
-        case 1:
+        case CLICKED_COOKIE:
             manualClicker->generate(1);
             stats.registerClick();
             stats.addCookies(1LL);
             cookies += 1;
             break;
-        case 2:
-        case 3:
-        case 4: {
+        case BUY_FACTORY:
+        case BUY_GRANDMA:
+        case BUY_AUTOCLICKER: {
             int index = choice - 2;
             if (cookies >= generators[index]->getCost()) {
                 cookies -= generators[index]->getCost();
@@ -36,9 +38,14 @@ void GameManager::handleChoice(int choice) {
         case 6:
             stats.printStats();
             break;
-        case 9:
+        case SAVE_FILE:
             saveFile.saveFile(cookies, generators);
             break;
+        case BUY_GOLDEN_DOUGH:
+            if (cookies >= 500) { // golden dough costs 500 cookies
+                hasGoldenDough = true;
+                cookies -= 500;
+            }
         case 0:
             std::cout << "Exiting game.\n";
             break;
@@ -71,6 +78,7 @@ float GameManager::calculateTotalCps() const {
     for (const auto& g : generators) {
         total += g->getCps();
     }
+    if (hasGoldenDough) return total * 2; // golden dough doubles cps for all generators
     return total;
 }
 
