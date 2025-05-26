@@ -60,9 +60,6 @@ void GameManager::runAutoGeneration() {
 
 
 
-
-
-
 int GameManager::getCookieCount() const {
     return cookies;
 }
