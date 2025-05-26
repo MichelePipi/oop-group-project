@@ -18,12 +18,14 @@ SaveFileManager::SaveFileManager() {
 SaveFileManager::~SaveFileManager() {
 }
 
-void SaveFileManager::saveFile(long long cookies, const std::vector<std::unique_ptr<AutoGenerator>>& generators) {
+void SaveFileManager::saveFile(long long cookies, const std::vector<std::unique_ptr<AutoGenerator>>& generators, bool hasGoldenCookieDough) {
     std::ofstream Save(this->generateFileName() + ".txt");
     Save << cookies << std::endl;
     Save << generators[0]->getLevel() << std::endl;
     Save << generators[1]->getLevel() << std::endl;
     Save << generators[2]->getLevel() << std::endl;
+    if (hasGoldenCookieDough) Save << 1 << std::endl;
+    else Save << 0 << std::endl;
     // TODO: Add the total cookies earnt
     // Save << "test";
     Save.close();

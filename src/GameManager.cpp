@@ -39,7 +39,7 @@ void GameManager::handleChoice(int choice) {
             stats.printStats();
             break;
         case SAVE_FILE:
-            saveFile.saveFile(cookies, generators);
+            saveFile.saveFile(cookies, generators, hasGoldenDough);
             break;
         case BUY_GOLDEN_DOUGH:
             if (hasGoldenDough) return;
