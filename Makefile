@@ -8,7 +8,8 @@ SRC = src/main.cpp \
       src/AutoGenerator.cpp \
       src/Factory.cpp \
       src/Grandma.cpp \
-      src/Autoclicker.cpp
+      src/Autoclicker.cpp \
+      src/SaveFileManager.cpp 
 
 OUT = bin/cookie.exe
 
