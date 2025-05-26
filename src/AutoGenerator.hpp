@@ -1,5 +1,6 @@
 #pragma once
 #include "ClickableItem.hpp"
+#include <memory>
 
 class AutoGenerator : public ClickableItem {
     protected:
