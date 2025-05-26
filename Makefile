@@ -1,6 +1,6 @@
 CXX = g++
 CXXFLAGS = -std=c++17 -IC:/sfml/include
-LDFLAGS = -LC:/sfml/lib -lsfml-graphics -lsfml-window -lsfml-system -static-libgcc -static-libstdc++
+LDFLAGS = -LC:/sfml/lib -lsfml-graphics -lsfml-window -lsfml-system -lole32 -luuid -lcomdlg32 -static-libgcc -static-libstdc++
 
 SRC = src/main.cpp \
       src/GameManager.cpp \
@@ -9,7 +9,7 @@ SRC = src/main.cpp \
       src/Factory.cpp \
       src/Grandma.cpp \
       src/Autoclicker.cpp \
-      src/SaveFileManager.cpp 
+      src/SaveFileManager.cpp
 
 OUT = bin/cookie.exe
 

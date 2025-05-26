@@ -21,7 +21,7 @@ int main() {
     sf::RenderWindow window(sf::VideoMode({800, 500}, 32), "I Eat Cookies"); // render window obj
 
     sf::Font font; // Loading font from assets, make sure that it loads correctly.
-    if (!font.openFromFile("./assets/arial.ttf")) {
+    if (!font.openFromFile("../assets/arial.ttf")) {
         std::cerr << "no fonts detected\n";
         return 1; // error
     }
@@ -51,10 +51,10 @@ int main() {
 
     // Game Assets
     sf::Texture cookiePixelTex, cookieSmoothTex, cookieBlurTex, cookieGoldenTex;
-    if (!cookiePixelTex.loadFromFile("./assets/cookie_pixel.png")) std::cerr << "Failed to load cookie_pixel.png\n";
-    if (!cookieSmoothTex.loadFromFile("./assets/cookie_smooth.png")) std::cerr << "Failed to load cookie_smooth.png\n";
-    if (!cookieBlurTex.loadFromFile("./assets/cookie_broken.png")) std::cerr << "Failed to load cookie_broken.png\n";
-    if (!cookieGoldenTex.loadFromFile("./assets/cookie_golden.png")) std::cerr << "Failed to load cookie_golden.png\n";
+    if (!cookiePixelTex.loadFromFile("../assets/cookie_pixel.png")) std::cerr << "Failed to load cookie_pixel.png\n";
+    if (!cookieSmoothTex.loadFromFile("../assets/cookie_smooth.png")) std::cerr << "Failed to load cookie_smooth.png\n";
+    if (!cookieBlurTex.loadFromFile("../assets/cookie_broken.png")) std::cerr << "Failed to load cookie_broken.png\n";
+    if (!cookieGoldenTex.loadFromFile("../assets/cookie_golden.png")) std::cerr << "Failed to load cookie_golden.png\n";
 
     sf::CircleShape cookieShape(100.f);
     cookieShape.setOrigin(sf::Vector2f(100.f, 100.f));

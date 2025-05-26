@@ -52,8 +52,7 @@ void SaveFileManager::loadFile() {
 
 }
 
-bool SaveFileManager::isValidFloat(const std::string &s, float &result) {
-}
+bool SaveFileManager::isValidFloat(const std::string &s, float &result) { return true;}
 
 std::string SaveFileManager::generateFileName() {
     static std::random_device dev;
