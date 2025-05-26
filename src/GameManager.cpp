@@ -8,8 +8,6 @@ GameManager::GameManager()
     generators.emplace_back(std::make_unique<Autoclicker>());
 }
 
-
-
 void GameManager::handleChoice(int choice) {
     switch (choice) {
         case CLICKED_COOKIE:

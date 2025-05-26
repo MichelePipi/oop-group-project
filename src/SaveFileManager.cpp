@@ -74,6 +74,7 @@ std::vector<double> SaveFileManager::loadFile() {
     return {};
 }
 
+
 std::string SaveFileManager::generateFileName() {
     static std::random_device dev;
     static std::mt19937 rng(dev());
