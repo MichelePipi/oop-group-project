@@ -31,9 +31,9 @@ void GameManager::handleChoice(int choice) {
             }
             break;
         }
-        case 5:
-            showGenerators();
-            break;
+        // case 5:
+        //     showGenerators();
+        //     break;
 
         case 6:
             stats.printStats();
