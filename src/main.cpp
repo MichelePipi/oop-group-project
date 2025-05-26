@@ -4,6 +4,7 @@
 #include <sstream>
 #include <vector>
 #include <algorithm>
+#include <memory>
 
 #include "Action.hpp"
 #include "../include/portable-file-dialogs.h"
@@ -22,7 +23,7 @@ int main() {
     sf::RenderWindow window(sf::VideoMode({800, 500}, 32), "I Eat Cookies"); // render window obj
 
     sf::Font font; // Loading font from assets, make sure that it loads correctly.
-    if (!font.openFromFile("./assets/arial.ttf")) {
+    if (!font.openFromFile("../assets/arial.ttf")) {
         std::cerr << "no fonts detected\n";
         return 1; // error
     }
@@ -48,10 +49,10 @@ int main() {
 
     // Game Assets
     sf::Texture cookiePixelTex, cookieSmoothTex, cookieBlurTex, cookieGoldenTex;
-    if (!cookiePixelTex.loadFromFile("./assets/cookie_pixel.png")) std::cerr << "Failed to load cookie_pixel.png\n";
-    if (!cookieSmoothTex.loadFromFile("./assets/cookie_smooth.png")) std::cerr << "Failed to load cookie_smooth.png\n";
-    if (!cookieBlurTex.loadFromFile("./assets/cookie_broken.png")) std::cerr << "Failed to load cookie_broken.png\n";
-    if (!cookieGoldenTex.loadFromFile("./assets/cookie_golden.png")) std::cerr << "Failed to load cookie_golden.png\n";
+    if (!cookiePixelTex.loadFromFile("../assets/cookie_pixel.png")) std::cerr << "Failed to load cookie_pixel.png\n";
+    if (!cookieSmoothTex.loadFromFile("../assets/cookie_smooth.png")) std::cerr << "Failed to load cookie_smooth.png\n";
+    if (!cookieBlurTex.loadFromFile("../assets/cookie_broken.png")) std::cerr << "Failed to load cookie_broken.png\n";
+    if (!cookieGoldenTex.loadFromFile("../assets/cookie_golden.png")) std::cerr << "Failed to load cookie_golden.png\n";
 
     sf::CircleShape cookieShape(100.f);
     cookieShape.setOrigin(sf::Vector2f(100.f, 100.f));
@@ -63,8 +64,8 @@ int main() {
     cookieSprite.setPosition(sf::Vector2f(720.f / 2.f, 480.f / 2.f));
 
     bool usingShape = true;
-
-    GameManager game;
+    //change to d malloc
+    std::unique_ptr<GameManager> game = std::make_unique<GameManager>();
     sf::Clock cpsClock;
     sf::Clock animationClock;
 
@@ -137,13 +138,13 @@ int main() {
                             gameState = GameState::Playing;
                         }
                         if (loadBtn.getGlobalBounds().contains(mouse)) {
-                            game.saveFile.loadFile();
+                            game->saveFile.loadFile();
                         }
                         // You can handle loadBtn and statsBtn later
                     } else if (gameState == GameState::Playing) {
                         if ((usingShape && cookieShape.getGlobalBounds().contains(mouse)) ||
                             (!usingShape && cookieSprite.getGlobalBounds().contains(mouse))) {
-                            game.handleChoice(1);
+                            game->handleChoice(1);
                             cookieClicked = true;
                             cookieScale = 1.2f;
 
@@ -152,21 +153,21 @@ int main() {
                             plus.setPosition(mouse);
                             floatingTexts.push_back({plus, sf::Vector2f(0, -40.f), 1.0f});
                         } else if (buyFactory.getGlobalBounds().contains(mouse)) {
-                            game.handleChoice(BUY_FACTORY);
+                            game->handleChoice(BUY_FACTORY);
                         } else if (buyGrandma.getGlobalBounds().contains(mouse)) {
-                            game.handleChoice(BUY_GRANDMA);
+                            game->handleChoice(BUY_GRANDMA);
                         } else if (buyAutoclicker.getGlobalBounds().contains(mouse)) {
-                            game.handleChoice(BUY_AUTOCLICKER);
+                            game->handleChoice(BUY_AUTOCLICKER);
                         } else if (saveText.getGlobalBounds().contains(mouse)) {
-                            game.handleChoice(SAVE_FILE);
-                            std::string uuid = game.saveFile.generateFileName(); // You must expose this in GameManager
+                            game->handleChoice(SAVE_FILE);
+                            std::string uuid = game->saveFile.generateFileName(); // You must expose this in GameManager
                             savedMessage.setString("Saved to [" + uuid.substr(0, 5) + "]");
                             savedMessageClock.restart();
                             showSavedMessage = true;
                         } else if (backToMainMenu.getGlobalBounds().contains(mouse)) {
                             gameState = GameState::MainMenu;
                         } else if (goldenCookieDough.getGlobalBounds().contains(mouse)) {
-                            game.handleChoice(BUY_GOLDEN_DOUGH);
+                            game->handleChoice(BUY_GOLDEN_DOUGH);
                         }
                     }
                 }
@@ -175,8 +176,8 @@ int main() {
 
         if (gameState == GameState::Playing) {
             if (cpsClock.getElapsedTime().asSeconds() >= 1.f) {
-                game.runAutoGeneration();
-                game.setCookies(game.getCookieCount()+game.calculateTotalCps());
+                game->runAutoGeneration();
+                game->setCookies(game->getCookieCount()+game->calculateTotalCps());
                 cpsClock.restart();
             }
             if (cookieClicked) {
@@ -206,7 +207,7 @@ int main() {
                 floatingTexts.end()
             );
 
-            float cps = game.calculateTotalCps();
+            float cps = game->calculateTotalCps();
 
             if (cps >= 5.f) {
                 cookieSprite.setTexture(cookieGoldenTex);
@@ -224,25 +225,25 @@ int main() {
                 usingShape = true;
             }
 
-            if (!game.hasGoldenDough) {
+            if (!game->hasGoldenDough) {
                 goldenCookieDoughInfo.setString("Cost: 500, Active: NO\n x2 CPS Permanently.");
             } else {
                 goldenCookieDoughInfo.setString("Cost: 500, Active: YES\n x2 CPS Permanently.");
             }
 
-            cookieText.setString("Cookies: " + std::to_string(game.getCookieCount()));
+            cookieText.setString("Cookies: " + std::to_string(game->getCookieCount()));
 
             std::ostringstream cpsStream;
             cpsStream.precision(2);
             cpsStream << std::fixed << "CPS: " << cps;
             totalCps.setString(cpsStream.str());
 
-            factoryInfo.setString("Cost: " + std::to_string(game.getGeneratorCost(0)) +
-                                   " | Lvl: " + std::to_string(game.getGeneratorLevel(0)));
-            grandmaInfo.setString("Cost: " + std::to_string(game.getGeneratorCost(1)) +
-                                   " | Lvl: " + std::to_string(game.getGeneratorLevel(1)));
-            autoclickerInfo.setString("Cost: " + std::to_string(game.getGeneratorCost(2)) +
-                                      " | Lvl: " + std::to_string(game.getGeneratorLevel(2)));
+            factoryInfo.setString("Cost: " + std::to_string(game->getGeneratorCost(0)) +
+                                   " | Lvl: " + std::to_string(game->getGeneratorLevel(0)));
+            grandmaInfo.setString("Cost: " + std::to_string(game->getGeneratorCost(1)) +
+                                   " | Lvl: " + std::to_string(game->getGeneratorLevel(1)));
+            autoclickerInfo.setString("Cost: " + std::to_string(game->getGeneratorCost(2)) +
+                                      " | Lvl: " + std::to_string(game->getGeneratorLevel(2)));
         }
 
         window.clear();

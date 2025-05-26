@@ -31,9 +31,9 @@ void GameManager::handleChoice(int choice) {
             }
             break;
         }
-        // case 5:
-        //     showGenerators();
-        //     break;
+         case 5:
+             showGenerators();
+             break;
 
         case 6:
             stats.printStats();
@@ -47,6 +47,7 @@ void GameManager::handleChoice(int choice) {
                 hasGoldenDough = true;
                 cookies -= 500;
             }
+            break;
         case 0:
             std::cout << "Exiting game.\n";
             break;
