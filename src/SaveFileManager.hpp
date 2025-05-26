@@ -14,7 +14,7 @@ class SaveFileManager {
     public:
         SaveFileManager();
         ~SaveFileManager();
-        void saveFile(long long cookies, const std::vector<std::unique_ptr<AutoGenerator>>& generators);
+        void saveFile(long long cookies, const std::vector<std::unique_ptr<AutoGenerator>>& generators, bool hasGoldenCookieDough);
         std::vector<double> loadFile();
         std::string generateFileName();
 };
