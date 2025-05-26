@@ -41,6 +41,10 @@ int main() {
     loadBtn.setFillColor(sf::Color::Yellow);
     loadBtn.setPosition({320.f, 210.f});
 
+    sf::Text backToMainMenu(font, "MAIN MENU", 20);
+    backToMainMenu.setFillColor(sf::Color::Green);
+    backToMainMenu.setPosition({600.f, 20.f});
+
     // sf::Text statsBtn(font, "STATS", 30);
     // statsBtn.setFillColor(sf::Color::Cyan);
     // statsBtn.setPosition({320.f, 270.f});
@@ -153,6 +157,8 @@ int main() {
                             savedMessage.setString("Saved to [" + uuid.substr(0, 5) + "]");
                             savedMessageClock.restart();
                             showSavedMessage = true;
+                        } else if (backToMainMenu.getGlobalBounds().contains(mouse)) {
+                            gameState = GameState::MainMenu;
                         }
                     }
                 }
@@ -245,6 +251,7 @@ int main() {
             window.draw(buyAutoclicker);
             window.draw(autoclickerInfo);
             window.draw(saveText);
+            window.draw(backToMainMenu);
 
             for (auto& t : floatingTexts) {
                 window.draw(t.text);
