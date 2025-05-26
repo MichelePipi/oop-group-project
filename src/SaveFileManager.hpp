@@ -15,7 +15,7 @@ class SaveFileManager {
         SaveFileManager();
         ~SaveFileManager();
         void saveFile(long long cookies, const std::vector<std::unique_ptr<AutoGenerator>>& generators);
-        void loadFile();
+        std::vector<double> loadFile();
         std::string generateFileName();
     private:
         bool isValidFloat(const std::string& s, float& result);

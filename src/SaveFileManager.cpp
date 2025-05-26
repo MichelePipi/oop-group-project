@@ -29,26 +29,48 @@ void SaveFileManager::saveFile(long long cookies, const std::vector<std::unique_
     Save.close();
 }
 
-void SaveFileManager::loadFile() {
-    // read from the file
+bool is_number(const std::string& s, double& out) {
+    std::istringstream iss(s);
+    iss >> out;
+    return !(iss.fail() || !iss.eof());
+}
+
+std::vector<double> SaveFileManager::loadFile() {
+    std::vector<double> numbers;
+
     auto selection = pfd::open_file("Select a Save File", ".", { "Save Files (*.txt *.sav)", "*.txt *.sav" }).result();
 
     if (!selection.empty()) {
         std::ifstream file(selection[0]);
         if (!file) {
             std::cerr << "Failed to open file.\n";
-            return;
+            return {};
         }
 
         std::string line;
-        while (std::getline(file, line)) {
+        int lineCount = 0;
+        while (lineCount < 4 && std::getline(file, line)) {
             std::cout << "Read: " << line << std::endl;
+            double value;
+            if (!is_number(line, value)) {
+                std::cerr << "Invalid number on line " << (lineCount + 1) << ": " << line << "\n";
+                return {};
+            }
+            numbers.push_back(value);
+            ++lineCount;
         }
+
+        if (lineCount < 4) {
+            std::cerr << "File contains fewer than 4 lines.\n";
+            return {};
+        }
+
         file.close();
+        return numbers;
     } else {
         std::cout << "No file selected.\n";
+        return {};
     }
-
 }
 
 bool SaveFileManager::isValidFloat(const std::string &s, float &result) {
