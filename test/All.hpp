@@ -1,0 +1,8 @@
+#include "../src/GameManager.cpp"
+#include "../src/Autoclicker.cpp"
+#include "../src/AutoGenerator.cpp"
+#include "../src/ClickableItem.hpp"
+#include "../src/Factory.cpp"
+#include "../src/Grandma.cpp"
+#include "../src/ManualClicker.cpp"
+#include "../src/SaveFileManager.cpp"
