@@ -57,20 +57,20 @@ int main() {
 
     // ---------- Load Cookie Textures ----------
     sf::Texture cookiePixelTex, cookieSmoothTex, cookieBlurTex, cookieGoldenTex;
-    cookiePixelTex.loadFromFile("./assets/cookie_pixel.png");
-    cookieSmoothTex.loadFromFile("./assets/cookie_smooth.png");
-    cookieBlurTex.loadFromFile("./assets/cookie_broken.png");
-    cookieGoldenTex.loadFromFile("./assets/cookie_golden.png");
+    if (!cookiePixelTex.loadFromFile("./assets/cookie_pixel.png")) std::cerr << "Failed to load cookie_pixel.png\n";
+    if (!cookieSmoothTex.loadFromFile("./assets/cookie_smooth.png")) std::cerr << "Failed to load cookie_smooth.png\n";
+    if (!cookieBlurTex.loadFromFile("./assets/cookie_broken.png")) std::cerr << "Failed to load cookie_broken.png\n";
+    if (!cookieGoldenTex.loadFromFile("./assets/cookie_golden.png")) std::cerr << "Failed to load cookie_golden.png\n";
 
     // ---------- Cookie Visual ----------
     sf::CircleShape cookieShape(100.f);
-    cookieShape.setOrigin(100.f, 100.f);
+    cookieShape.setOrigin(sf::Vector2f(100.f, 100.f));
     cookieShape.setFillColor(sf::Color(139, 69, 19));
-    cookieShape.setPosition(360.f, 240.f);
+    cookieShape.setPosition(sf::Vector2f(720.f / 2.f, 480.f / 2.f));
 
     sf::Sprite cookieSprite(cookiePixelTex);
-    cookieSprite.setOrigin(100.f, 100.f);
-    cookieSprite.setPosition(360.f, 240.f);
+    cookieSprite.setOrigin(sf::Vector2f(100.f, 100.f));
+    cookieSprite.setPosition(sf::Vector2f(720.f / 2.f, 480.f / 2.f));
 
     bool usingShape = true; // Whether to use the shape or the sprite
     std::unique_ptr<GameManager> game = std::make_unique<GameManager>();

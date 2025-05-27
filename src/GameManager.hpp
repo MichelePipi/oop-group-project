@@ -3,13 +3,10 @@
 // STL and standard includes
 #include <vector>
 #include <memory>
-<<<<<<< HEAD
 #include <iostream>
 #include <fstream>
 
 // Project includes
-=======
->>>>>>> 011aabcd768fe0980d18f303789ddbd36cb7c7c3
 #include "ClickableItem.hpp"
 #include "AutoGenerator.hpp"
 #include "StatsTracker.hpp"
@@ -28,7 +25,6 @@ public:
     // Constructor: Initializes clicker, stats, and generator list
     GameManager();
 
-<<<<<<< HEAD
     // Flag indicating whether the player owns the Golden Dough upgrade
     bool hasGoldenDough;
 
@@ -67,16 +63,14 @@ public:
     // Sets the cookie count (used for loading saved data)
     void setCookies(long long c);
 
-    // SaveFileManager handles saving/loading game data to and from disk
+    // // SaveFileManager handles saving/loading game data to and from disk
     SaveFileManager saveFile;
-=======
-        // GUI helpers
-        int getCookieCount() const;
-        float calculateTotalCps() const;
-        int getGeneratorCost(int index) const;
-        int getGeneratorLevel(int index) const;
-        void setCookies(long long c);
+    //     // GUI helpers
+    //     int getCookieCount() const;
+    //     float calculateTotalCps() const;
+    //     int getGeneratorCost(int index) const;
+    //     int getGeneratorLevel(int index) const;
+    //     void setCookies(long long c);
         void loadSaveData(const std::vector<double> &variables);
-        SaveFileManager saveFile;
->>>>>>> 011aabcd768fe0980d18f303789ddbd36cb7c7c3
+        // SaveFileManager saveFile;
 };
