@@ -61,7 +61,6 @@ std::vector<double> SaveFileManager::loadFile() {
             numbers.push_back(value);
             ++lineCount;
         }
-
         if (lineCount < 5) {
             std::cerr << "File contains fewer than 5 lines.\n";
             return {};
@@ -73,6 +72,7 @@ std::vector<double> SaveFileManager::loadFile() {
     std::cout << "No file selected.\n";
     return {};
 }
+
 
 std::string SaveFileManager::generateFileName() {
     static std::random_device dev;

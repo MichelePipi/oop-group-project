@@ -1,5 +1,9 @@
 #include "GameManager.hpp"
 #include "Action.hpp"
+#include "Autoclicker.hpp"
+#include "Factory.hpp"
+#include "Grandma.hpp"
+#include "ManualClicker.hpp"
 
 // Constructor:
 // Initializes cookie count to 0 and sets up the manual clicker.
@@ -11,8 +15,8 @@ GameManager::GameManager()
     generators.emplace_back(std::make_unique<Autoclicker>());
 }
 
-// Handles user choices from the menu.
-// Handles clicking, buying generators, showing stats, saving, and quitting.
+
+
 void GameManager::handleChoice(int choice) {
     switch (choice) {
         case CLICKED_COOKIE:
@@ -121,3 +125,4 @@ int GameManager::getGeneratorCost(int index) const {
 void GameManager::setCookies(long long c) {
     cookies = c;
 }
+

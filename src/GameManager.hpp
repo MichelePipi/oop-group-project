@@ -3,16 +3,15 @@
 // STL and standard includes
 #include <vector>
 #include <memory>
+<<<<<<< HEAD
 #include <iostream>
 #include <fstream>
 
 // Project includes
+=======
+>>>>>>> 011aabcd768fe0980d18f303789ddbd36cb7c7c3
 #include "ClickableItem.hpp"
-#include "ManualClicker.hpp"
 #include "AutoGenerator.hpp"
-#include "Factory.hpp"
-#include "Grandma.hpp"
-#include "Autoclicker.hpp"
 #include "StatsTracker.hpp"
 #include "SaveFileManager.hpp"
 
@@ -29,6 +28,7 @@ public:
     // Constructor: Initializes clicker, stats, and generator list
     GameManager();
 
+<<<<<<< HEAD
     // Flag indicating whether the player owns the Golden Dough upgrade
     bool hasGoldenDough;
 
@@ -69,4 +69,14 @@ public:
 
     // SaveFileManager handles saving/loading game data to and from disk
     SaveFileManager saveFile;
+=======
+        // GUI helpers
+        int getCookieCount() const;
+        float calculateTotalCps() const;
+        int getGeneratorCost(int index) const;
+        int getGeneratorLevel(int index) const;
+        void setCookies(long long c);
+        void loadSaveData(const std::vector<double> &variables);
+        SaveFileManager saveFile;
+>>>>>>> 011aabcd768fe0980d18f303789ddbd36cb7c7c3
 };

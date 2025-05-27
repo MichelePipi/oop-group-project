@@ -1,7 +1,6 @@
 #define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
 #include "../include/doctest.h"
 #include "All.hpp"
-#include <math.h>
 // #include "../src/*"
 
 TEST_CASE("GameManager initializes correctly") {
@@ -50,4 +49,25 @@ TEST_CASE("price of autoclicker at level 50") {
         gm.handleChoice(4);
     }
     CHECK(gm.generators[2]->getCost() == 533);
+}
+
+// test garble save file
+TEST_CASE("Test garblefile.txt") {
+    GameManager gm;
+    gm.saveFile.loadFile();
+
+    CHECK(gm.calculateTotalCps() == 0.f);
+}
+
+TEST_CASE("Test random save data [valid]") {
+    GameManager gm;
+    gm.loadSaveData(gm.saveFile.loadFile());
+
+    CHECK(gm.getCookieCount() == 1026628LL);
+}
+
+TEST_CASE("Test not enough data") {
+    GameManager gm;
+    gm.loadSaveData(gm.saveFile.loadFile());
+    CHECK(gm.getCookieCount() == 0);
 }
