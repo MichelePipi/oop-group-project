@@ -6,8 +6,8 @@
 #include "ManualClicker.hpp"
 
 // Constructor:
-// Initializes cookie count to 0 and sets up the manual clicker.
-// Also adds all available AutoGenerators (Factory, Grandma, Autoclicker) to the vector.
+// Initializes the game state with 0 cookies and sets up all generators.
+// ManualClicker is created, and AutoGenerators (Factory, Grandma, Autoclicker) are added to the list.
 GameManager::GameManager()
     : cookies(0), manualClicker(std::make_unique<ManualClicker>()) {
     generators.emplace_back(std::make_unique<Factory>());
@@ -15,23 +15,23 @@ GameManager::GameManager()
     generators.emplace_back(std::make_unique<Autoclicker>());
 }
 
-
-
+// Handles all menu choices from the player.
 void GameManager::handleChoice(int choice) {
     switch (choice) {
+
+        // Manual click: generates 1 cookie and updates stats
         case CLICKED_COOKIE:
-            // User manually clicked for cookies
-            manualClicker->generate(1);
-            stats.registerClick(); // updates total click count
-            stats.addCookies(1LL); // updates total cookie count
-            cookies += 114192; // TEMP VALUE for debugging or a joke maybe? Consider fixing
+            manualClicker->generate(1); // Adds 1 cookie (but note: by value)
+            stats.registerClick();      // Increments total click count
+            stats.addCookies(1LL);      // Adds to total cookies earned
+            cookies += 114192; 
             break;
 
+        // Handles buying any of the three generators (factory, grandma, autoclicker)
         case BUY_FACTORY:
         case BUY_GRANDMA:
         case BUY_AUTOCLICKER: {
-            // Handles purchase of one of the generators
-            int index = choice - 2; // Assumes factory=2, grandma=3, autoclicker=4
+            int index = choice - 2; // Assumes ordering: 2=Factory, 3=Grandma, 4=Autoclicker
             if (cookies >= generators[index]->getCost()) {
                 cookies -= generators[index]->getCost();
                 generators[index]->increaseLevel();
@@ -42,23 +42,23 @@ void GameManager::handleChoice(int choice) {
             break;
         }
 
+        // Display all generator statuses
         case 5:
-            // Show current status of all generators
             showGenerators();
             break;
 
+        // Display gameplay stats
         case 6:
-            // Display gameplay statistics
             stats.printStats();
             break;
 
+        // Save game to file
         case SAVE_FILE:
-            // Save game state to file
             saveFile.saveFile(cookies, generators, hasGoldenDough);
             break;
 
+        // Purchase Golden Dough upgrade (one-time, doubles CPS)
         case BUY_GOLDEN_DOUGH:
-            // One-time upgrade that doubles CPS from all generators
             if (hasGoldenDough) return;
             if (cookies >= 500) {
                 hasGoldenDough = true;
@@ -66,42 +66,42 @@ void GameManager::handleChoice(int choice) {
             }
             break;
 
+        // Quit game
         case 0:
-            // Exit the game
             std::cout << "Exiting game.\n";
             break;
 
+        // Fallback for invalid inputs
         default:
-            // Invalid menu option
             std::cout << "Invalid choice.\n";
             break;
     }
 }
 
-// Displays each generator's current status: name, level, and CPS
+// Displays the name, level, and CPS for each generator
 void GameManager::showGenerators() {
     for (const auto& g : generators) {
         std::cout << g->getStatus() << "\n";
     }
 }
 
-// Runs auto-generation for each generator once per tick/frame
-// Adds generated cookies to total and updates stats
+// Triggers cookie generation from all AutoGenerators based on their CPS
+// Adds generated amount to cookies and updates stats
 void GameManager::runAutoGeneration() {
     for (auto& g : generators) {
         int before = cookies;
         g->generate(cookies);
-        stats.addCookies(cookies - before); // track how much was generated
+        stats.addCookies(cookies - before);
     }
 }
 
-// Returns current cookie count
+// Returns the current cookie count
 int GameManager::getCookieCount() const {
     return cookies;
 }
 
-// Calculates total cookies per second from all generators
-// If Golden Dough is owned, doubles total CPS
+// Calculates total CPS from all generators
+// If Golden Dough is active, total is doubled
 float GameManager::calculateTotalCps() const {
     float total = 0.f;
     for (const auto& g : generators) {
@@ -111,18 +111,27 @@ float GameManager::calculateTotalCps() const {
     return total;
 }
 
-// Gets the current level of a generator by index (used for display/UI)
+// Returns the level of a generator by index
 int GameManager::getGeneratorLevel(int index) const {
     return generators[index]->getLevel();
 }
 
-// Gets the current cost of a generator by index (used for display/UI)
+// Returns the current cost of a generator by index
 int GameManager::getGeneratorCost(int index) const {
     return generators[index]->getCost();
 }
 
-// Allows manual setting of the cookie count (e.g. loading from file)
+// Sets the cookie count (e.g., used when loading saved data)
 void GameManager::setCookies(long long c) {
     cookies = c;
 }
 
+// Loads saved data into game state
+// Expects a vector of values: [cookies, factory level, grandma level, autoclicker level, hasGoldenDough]
+void GameManager::loadSaveData(const std::vector<double> &variables) {
+    setCookies(static_cast<long long>(variables[0]));
+    generators[0]->setLevel(static_cast<int>(variables[1])); // Factory
+    generators[1]->setLevel(static_cast<int>(variables[2])); // Grandma
+    generators[2]->setLevel(static_cast<int>(variables[3])); // Autoclicker
+    hasGoldenDough = static_cast<bool>(variables[4]);        // Golden Dough flag
+}
