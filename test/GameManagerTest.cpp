@@ -1,7 +1,6 @@
 #define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
 #include "../include/doctest.h"
 #include "All.hpp"
-#include <math.h>
 // #include "../src/*"
 
 TEST_CASE("GameManager initializes correctly") {
@@ -67,3 +66,8 @@ TEST_CASE("Test random save data [valid]") {
     CHECK(gm.getCookieCount() == 1026628LL);
 }
 
+TEST_CASE("Test not enough data") {
+    GameManager gm;
+    gm.loadSaveData(gm.saveFile.loadFile());
+    CHECK(gm.getCookieCount() == 0);
+}

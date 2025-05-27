@@ -1,5 +1,9 @@
 #include "GameManager.hpp"
 #include "Action.hpp"
+#include "Autoclicker.hpp"
+#include "Factory.hpp"
+#include "Grandma.hpp"
+#include "ManualClicker.hpp"
 
 GameManager::GameManager()
     : cookies(0), manualClicker(std::make_unique<ManualClicker>()) {
@@ -92,5 +96,13 @@ int GameManager::getGeneratorCost(int index) const {
 
 void GameManager::setCookies(long long c) {
     cookies = c;
+}
+
+void GameManager::loadSaveData(const std::vector<double> &variables) {
+    setCookies((long)variables[0]);
+    generators[0]->setLevel((int)variables[1]);
+    generators[1]->setLevel((int)variables[2]);
+    generators[2]->setLevel((int)variables[3]);
+    hasGoldenDough = (bool)variables[4];
 }
 

@@ -61,7 +61,6 @@ std::vector<double> SaveFileManager::loadFile() {
             numbers.push_back(value);
             ++lineCount;
         }
-
         if (lineCount < 5) {
             std::cerr << "File contains fewer than 5 lines.\n";
             return {};

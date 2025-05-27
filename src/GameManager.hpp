@@ -1,14 +1,8 @@
 #pragma once
 #include <vector>
 #include <memory>
-#include <iostream>
-#include <fstream>
 #include "ClickableItem.hpp"
-#include "ManualClicker.hpp"
 #include "AutoGenerator.hpp"
-#include "Factory.hpp"
-#include "Grandma.hpp"
-#include "Autoclicker.hpp"
 #include "StatsTracker.hpp"
 #include "SaveFileManager.hpp"
 
@@ -34,5 +28,6 @@ class GameManager {
         int getGeneratorCost(int index) const;
         int getGeneratorLevel(int index) const;
         void setCookies(long long c);
+        void loadSaveData(const std::vector<double> &variables);
         SaveFileManager saveFile;
 };
