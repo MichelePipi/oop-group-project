@@ -17,7 +17,6 @@ public:
     AutoGenerator(const std::string& name, int cost, float cps);
 
     // Generates cookies based on the current level and CPS.
-    // Note: 'cookies' should ideally be passed by reference for real updates.
     void generate(long long cookies) override;
 
     // Calculates and returns the current total CPS (baseCps * level)
