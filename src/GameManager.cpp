@@ -24,7 +24,7 @@ void GameManager::handleChoice(int choice) {
             manualClicker->generate(1); // Adds 1 cookie (but note: by value)
             stats.registerClick();      // Increments total click count
             stats.addCookies(1LL);      // Adds to total cookies earned
-            cookies += 114192; 
+            cookies += 1;
             break;
 
         // Handles buying any of the three generators (factory, grandma, autoclicker)
